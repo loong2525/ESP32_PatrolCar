@@ -18,6 +18,12 @@ const int BIN2_round=8;
 
 const int LED=26;
 
+#define D01 32//左1
+#define D02 35//左2
+#define D03 34//中间
+#define D04 39//右2
+#define D05 36//右1
+//HIGH 为寻到黑线；LOW为未寻到黑线
 
 
 /*电驱控制函数  
@@ -85,6 +91,44 @@ void Anti(){move(2,50,1,1);move(2,50,1,2);move(1,50,2,1);move(1,50,2,2);}//antic
 void Stop(){move(0,0,0,0);}//制动
 
 
+void line ()
+{ 
+  Forward();
+  int D2=digitalRead(D02);
+  int D4=digitalRead(D04);
+  int D3=digitalRead(D03);
+ if(D2==HIGH && D4==LOW $$ D3==LOW)//右偏纠偏
+ {
+  Stop;
+  while(D3==LOW)
+  {
+    Anti();
+    D3=digitalRead(D03);
+  }
+  Stop();
+  Forward();
+ }
+ else if(D4==HIGH && D2==LOW && D3==LOW)//左偏纠偏
+ {
+  Stop();
+  while(D3==LOW)
+  {
+    Clock();
+    D3=digitalRead(D03);
+  }
+  Stop();
+  Forward()
+ }
+ else if (D2==LOW && D3==LOW && D4==LOW)//脱离地图，亮灯停车
+ {
+  digitalWrite(reminder,HIGH);
+  Stop;
+  delay(5000);
+ }
+ 
+};
+
+
 void setup()
 {
   Serial.begin(115200);
@@ -126,5 +170,6 @@ void loop()
   delay(3000);
   Serial.println("逆时针");
   Stop();
-  delay(5000);
+  delay(3000);
+  line();
 }
