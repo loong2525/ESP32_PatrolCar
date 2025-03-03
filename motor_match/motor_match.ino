@@ -1,4 +1,5 @@
 /*这个代码用于测试电机连接及相关硬件的正常使用
+  用于检查line（）的正确运行；
 */
 
 #include<Arduino.h>
@@ -16,7 +17,7 @@ const int BIN1_round=10;
 const int BIN2_round=8;
 
 
-const int LED=26;
+const int reminder=26;
 
 #define D01 32//左1
 #define D02 35//左2
@@ -97,7 +98,7 @@ void line ()
   int D2=digitalRead(D02);
   int D4=digitalRead(D04);
   int D3=digitalRead(D03);
- if(D2==HIGH && D4==LOW $$ D3==LOW)//右偏纠偏
+ if(D2==HIGH && D4==LOW && D3==LOW)//右偏纠偏
  {
   Stop;
   while(D3==LOW)
@@ -117,7 +118,7 @@ void line ()
     D3=digitalRead(D03);
   }
   Stop();
-  Forward()
+  Forward();
  }
  else if (D2==LOW && D3==LOW && D4==LOW)//脱离地图，亮灯停车
  {
@@ -144,10 +145,13 @@ void setup()
 	pinMode(STBY,OUTPUT);
 
 
-  pinMode(LED,OUTPUT);
+  pinMode(reminder,OUTPUT);
 }
 void loop()
 {
+  int Button = digitalRead(button);//检查开关功能是否正常
+  if(Button==LOW)
+  {
   Forward();
   delay(3000);
   Serial.println("前进");
@@ -155,7 +159,6 @@ void loop()
   Backward();
   delay(3000);
   
-  digitalWrite(LED,LOW);
   Serial.println("后退");
   Left();
   delay(3000);
@@ -171,5 +174,11 @@ void loop()
   Serial.println("逆时针");
   Stop();
   delay(3000);
-  line();
+  } 
+  else
+  {
+    line();
+  }
+  
+
 }
