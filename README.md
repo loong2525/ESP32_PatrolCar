@@ -1,4 +1,3 @@
-[toc]
 # description
 这是我2024年参加A413实验室纳新考核的基于ESP32主控小车
 include：
